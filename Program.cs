@@ -65,7 +65,8 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        context.Database.EnsureCreated();
+        // Use Migrate instead of EnsureCreated for production environments
+        context.Database.Migrate();
         
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();

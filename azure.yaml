@@ -1,0 +1,21 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+
+name: conferenceapp
+metadata:
+  template: conferenceapp@0.0.1-beta
+
+infra:
+  provider: bicep
+  path: infra
+
+workflows:
+  up:
+    steps:
+      - azd: provision
+      - azd: deploy
+
+services:
+  api:
+    project: .
+    language: dotnet
+    host: containerapp
