@@ -1,0 +1,70 @@
+name: Infrastructure Deployment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging  
+          - production
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'provision'
+        type: choice
+        options:
+          - provision
+          - destroy
+        
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  provision-infrastructure:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Azure Login with OIDC
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+    - name: Install Azure Developer CLI
+      uses: Azure/setup-azd@v1.0.0
+      
+    - name: Create Resource Group
+      run: |
+        az group create --name ${{ vars.AZURE_RESOURCE_GROUP }} --location ${{ vars.AZURE_LOCATION }}
+      
+    - name: Set AZD environment
+      run: |
+        azd env new ${{ vars.AZD_ENVIRONMENT_NAME }} --no-prompt
+        azd env set AZURE_SUBSCRIPTION_ID ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        azd env set AZURE_LOCATION ${{ vars.AZURE_LOCATION }}
+        azd env set AZURE_RESOURCE_GROUP ${{ vars.AZURE_RESOURCE_GROUP }}
+        
+    - name: Provision Azure Infrastructure
+      if: github.event.inputs.action == 'provision'
+      run: |
+        azd provision --no-prompt
+      env:
+        AZD_ALPHA_ENABLE_APPHOST: "false"
+        
+    - name: Destroy Azure Infrastructure
+      if: github.event.inputs.action == 'destroy'
+      run: |
+        azd down --no-prompt --purge --force
+      env:
+        AZD_ALPHA_ENABLE_APPHOST: "false"

@@ -1,0 +1,143 @@
+@model Session
+
+@{
+    ViewData["Title"] = "Session Details";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h2 class="card-title mb-0">@Model.Title</h2>
+                        <p class="text-muted mb-0">by @Model.SpeakerName</p>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-primary fs-6">@Model.Technology</span>
+                        <span class="badge bg-secondary fs-6">@Model.Level</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <p class="card-text">@Model.Description</p>
+                
+                @if (!string.IsNullOrEmpty(Model.SpeakerBio))
+                {
+                    <h5>About the Speaker</h5>
+                    <p class="card-text">@Model.SpeakerBio</p>
+                }
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Session Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Date & Time:</strong><br />
+                   @Model.SessionDate.ToString("MMMM dd, yyyy")<br />
+                   @Model.SessionDate.ToString("HH:mm") - @Model.SessionDate.AddMinutes(Model.DurationMinutes).ToString("HH:mm")</p>
+                
+                <p><strong>Duration:</strong> @Model.DurationMinutes minutes</p>
+                <p><strong>Room:</strong> @Model.Room</p>
+                <p><strong>Level:</strong> @Model.Level</p>
+                
+                <hr />
+                
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span><strong>Capacity:</strong></span>
+                        <span>@Model.CurrentRegistrationCount / @Model.MaxAttendees</span>
+                    </div>
+                    <div class="progress" style="height: 10px;">
+                        <div class="progress-bar @(Model.IsFull ? "bg-danger" : Model.AvailableSpots <= 5 ? "bg-warning" : "bg-success")" 
+                             role="progressbar" 
+                             style="width: @((double)Model.CurrentRegistrationCount / Model.MaxAttendees * 100)%"
+                             aria-valuenow="@Model.CurrentRegistrationCount" 
+                             aria-valuemin="0" 
+                             aria-valuemax="@Model.MaxAttendees">
+                        </div>
+                    </div>
+                    <small class="text-muted">@Model.AvailableSpots spots available</small>
+                </div>
+                
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    @if (ViewBag.IsRegistered == true)
+                    {
+                        <form asp-action="Unregister" asp-route-id="@Model.Id" method="post">
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle"></i> You are registered for this session!
+                            </div>
+                            <button type="submit" class="btn btn-outline-danger w-100" 
+                                    onclick="return confirm('Are you sure you want to unregister from this session?')">
+                                Unregister
+                            </button>
+                        </form>
+                    }
+                    else if (Model.IsFull)
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> This session is full
+                        </div>
+                        <button class="btn btn-secondary w-100" disabled>Session Full</button>
+                    }
+                    else
+                    {
+                        <form asp-action="Register" asp-route-id="@Model.Id" method="post">
+                            <div class="mb-3">
+                                <label for="specialRequirements" class="form-label">Special Requirements (optional)</label>
+                                <textarea name="specialRequirements" id="specialRequirements" class="form-control" rows="2" 
+                                          placeholder="Any dietary restrictions, accessibility needs, etc."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Register for Session</button>
+                        </form>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-info">
+                        <p class="mb-2">Please log in to register for sessions.</p>
+                        <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary w-100">Login</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.Registrations.Any())
+{
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Registered Attendees (@Model.CurrentRegistrationCount)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach (var registration in Model.Registrations.Take(12))
+                        {
+                            <div class="col-md-3 col-sm-4 col-6 mb-2">
+                                <small class="text-muted">@registration.User.FullName</small>
+                            </div>
+                        }
+                        @if (Model.Registrations.Count > 12)
+                        {
+                            <div class="col-12">
+                                <small class="text-muted">... and @(Model.Registrations.Count - 12) more attendees</small>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="mt-3">
+    <a asp-action="Index" class="btn btn-outline-primary">← Back to Sessions</a>
+</div>
