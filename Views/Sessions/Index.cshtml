@@ -8,7 +8,14 @@
     <h1>Conference Sessions</h1>
     @if (User.Identity.IsAuthenticated)
     {
-        <a asp-action="Submit" class="btn btn-success">Submit Session</a>
+        <div class="btn-group" role="group">
+            <a asp-action="Submit" class="btn btn-success">
+                <i class="fas fa-plus"></i> Submit Session
+            </a>
+            <a asp-action="MySubmissions" class="btn btn-outline-primary">
+                <i class="fas fa-list"></i> My Submissions
+            </a>
+        </div>
     }
 </div>
 

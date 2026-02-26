@@ -1,0 +1,145 @@
+@model IEnumerable<ConferenceApp.Models.SessionSubmission>
+
+@{
+    ViewData["Title"] = "My Session Submissions";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-file-alt"></i> My Session Submissions</h2>
+        <a asp-action="Submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Submit New Session
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">No submissions yet</h4>
+                <p class="text-muted">You haven't submitted any sessions for review.</p>
+                <a asp-action="Submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-plus-circle"></i> Submit Your First Session
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var submission in Model)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">@submission.Title</span>
+                            @switch (submission.Status)
+                            {
+                                case SubmissionStatus.Pending:
+                                    <span class="badge bg-warning"><i class="fas fa-clock"></i> Pending</span>
+                                    break;
+                                case SubmissionStatus.Approved:
+                                    <span class="badge bg-success"><i class="fas fa-check"></i> Approved</span>
+                                    break;
+                                case SubmissionStatus.Rejected:
+                                    <span class="badge bg-danger"><i class="fas fa-times"></i> Rejected</span>
+                                    break;
+                                case SubmissionStatus.NeedsRevision:
+                                    <span class="badge bg-info"><i class="fas fa-edit"></i> Needs Revision</span>
+                                    break;
+                            }
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text text-muted small mb-2">
+                                <strong>Speaker:</strong> @submission.SpeakerName
+                            </p>
+                            <p class="card-text text-muted small mb-2">
+                                <strong>Technology:</strong> @submission.Technology
+                            </p>
+                            <p class="card-text text-muted small mb-2">
+                                <strong>Format:</strong> @submission.Format
+                            </p>
+                            <p class="card-text text-muted small mb-2">
+                                <strong>Duration:</strong> @submission.PreferredDurationMinutes minutes
+                            </p>
+                            <p class="card-text text-muted small mb-3">
+                                <strong>Level:</strong> @submission.Level
+                            </p>
+                            
+                            <p class="card-text">@(submission.Description.Length > 150 ? submission.Description.Substring(0, 150) + "..." : submission.Description)</p>
+                            
+                            @if (!string.IsNullOrEmpty(submission.ReviewComments))
+                            {
+                                <div class="mt-3">
+                                    <strong class="text-muted">Review Comments:</strong>
+                                    <div class="bg-light p-2 rounded mt-1">
+                                        @submission.ReviewComments
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="card-footer text-muted small">
+                            <div class="d-flex justify-content-between">
+                                <span>
+                                    <i class="fas fa-calendar"></i> Submitted: @submission.SubmissionDate.ToString("MMM dd, yyyy")
+                                </span>
+                                @if (submission.ReviewDate.HasValue)
+                                {
+                                    <span>
+                                        <i class="fas fa-user-check"></i> Reviewed: @submission.ReviewDate.Value.ToString("MMM dd, yyyy")
+                                    </span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="mt-4">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">@Model.Count()</h5>
+                            <p class="card-text small text-muted">Total Submissions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-warning">@Model.Count(s => s.Status == SubmissionStatus.Pending)</h5>
+                            <p class="card-text small text-muted">Pending Review</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">@Model.Count(s => s.Status == SubmissionStatus.Approved)</h5>
+                            <p class="card-text small text-muted">Approved</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title text-danger">@Model.Count(s => s.Status == SubmissionStatus.Rejected)</h5>
+                            <p class="card-text small text-muted">Rejected</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

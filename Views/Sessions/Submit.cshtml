@@ -1,0 +1,169 @@
+@model ConferenceApp.Models.SessionSubmission
+
+@{
+    ViewData["Title"] = "Submit Session";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0"><i class="fas fa-plus-circle"></i> Submit a New Session</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-4">
+                        Share your expertise with the community! Fill out the form below to submit your session proposal.
+                        Our review committee will evaluate your submission and get back to you.
+                    </p>
+
+                    <form asp-action="Submit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                        
+                        <!-- Session Information -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-info-circle"></i> Session Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Title" class="form-label"></label>
+                                    <input asp-for="Title" class="form-control" placeholder="e.g., Building Scalable Web APIs with .NET\" />
+                                    <span asp-validation-for="Title" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="Description" class="form-label"></label>
+                                    <textarea asp-for="Description" class="form-control" rows="5" 
+                                              placeholder="Provide a detailed description of what attendees will learn, key topics covered, and takeaways..."></textarea>
+                                    <span asp-validation-for="Description" class="text-danger"></span>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Technology" class="form-label"></label>
+                                            <input asp-for="Technology" class="form-control" 
+                                                   placeholder="e.g., ASP.NET Core, React, Azure\" />
+                                            <span asp-validation-for="Technology" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="PreferredDurationMinutes" class="form-label"></label>
+                                            <select asp-for="PreferredDurationMinutes" class="form-select">
+                                                <option value="15">15 minutes (Lightning Talk)</option>
+                                                <option value="30" selected>30 minutes</option>
+                                                <option value="45">45 minutes</option>
+                                                <option value="60">60 minutes</option>
+                                                <option value="90">90 minutes (Workshop)</option>
+                                                <option value="120">2 hours (Workshop)</option>
+                                            </select>
+                                            <span asp-validation-for="PreferredDurationMinutes" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Level" class="form-label"></label>
+                                            <select asp-for="Level" asp-items="@Html.GetEnumSelectList<SessionLevel>()" class="form-select">
+                                            </select>
+                                            <span asp-validation-for="Level" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="Format" class="form-label"></label>
+                                            <select asp-for="Format" asp-items="@Html.GetEnumSelectList<PresentationFormat>()" class="form-select">
+                                            </select>
+                                            <span asp-validation-for="Format" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Speaker Information -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-user"></i> Speaker Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="SpeakerName" class="form-label"></label>
+                                            <input asp-for="SpeakerName" class="form-control" placeholder="Your full name\" />
+                                            <span asp-validation-for="SpeakerName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="SpeakerEmail" class="form-label"></label>
+                                            <input asp-for="SpeakerEmail" class="form-control" type="email" 
+                                                   placeholder="speaker@example.com\" />
+                                            <span asp-validation-for="SpeakerEmail" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="SpeakerBio" class="form-label"></label>
+                                    <textarea asp-for="SpeakerBio" class="form-control" rows="4" 
+                                              placeholder="Brief professional bio, experience, and credentials relevant to your session topic..."></textarea>
+                                    <span asp-validation-for="SpeakerBio" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Additional Details -->
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5 class="mb-0"><i class="fas fa-cogs"></i> Additional Details</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label asp-for="RoomPreference" class="form-label"></label>
+                                            <input asp-for="RoomPreference" class="form-control" 
+                                                   placeholder="e.g., Large auditorium, Small classroom\" />
+                                            <span asp-validation-for="RoomPreference" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="SpecialRequirements" class="form-label"></label>
+                                    <textarea asp-for="SpecialRequirements" class="form-control" rows="3" 
+                                              placeholder="Any special A/V equipment, room setup, or technical requirements..."></textarea>
+                                    <span asp-validation-for="SpecialRequirements" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label asp-for="AdditionalNotes" class="form-label"></label>
+                                    <textarea asp-for="AdditionalNotes" class="form-control" rows="3" 
+                                              placeholder="Any additional information you'd like the review committee to know..."></textarea>
+                                    <span asp-validation-for="AdditionalNotes" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary me-md-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-paper-plane"></i> Submit for Review
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

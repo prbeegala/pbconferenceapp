@@ -16,6 +16,16 @@ namespace ConferenceApp.Models
         [StringLength(1000)]
         public string Description { get; set; } = string.Empty;
 
+        [Required]
+        [Display(Name = "Speaker Name")]
+        [StringLength(100)]
+        public string SpeakerName { get; set; } = string.Empty;
+
+        [Display(Name = "Speaker Email")]
+        [EmailAddress]
+        [StringLength(150)]
+        public string? SpeakerEmail { get; set; }
+
         [Display(Name = "Speaker Bio")]
         [StringLength(500)]
         public string SpeakerBio { get; set; } = string.Empty;
@@ -32,6 +42,17 @@ namespace ConferenceApp.Models
 
         [Display(Name = "Level")]
         public SessionLevel Level { get; set; } = SessionLevel.Beginner;
+
+        [Display(Name = "Presentation Format")]
+        public PresentationFormat Format { get; set; } = PresentationFormat.Talk;
+
+        [Display(Name = "Room Preference")]
+        [StringLength(50)]
+        public string? RoomPreference { get; set; }
+
+        [Display(Name = "Special Requirements")]
+        [StringLength(300)]
+        public string? SpecialRequirements { get; set; }
 
         [Display(Name = "Additional Notes")]
         [StringLength(500)]
@@ -64,5 +85,14 @@ namespace ConferenceApp.Models
         Approved,
         Rejected,
         NeedsRevision
+    }
+
+    public enum PresentationFormat
+    {
+        Talk,
+        Workshop,
+        Panel,
+        Demo,
+        Lightning
     }
 }
