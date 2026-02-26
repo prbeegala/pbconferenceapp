@@ -6,19 +6,9 @@ using ConferenceApp.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-    ?? "Data Source=conferenceapp.db";
-
-if (builder.Environment.IsDevelopment())
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlite(connectionString));
-}
-else
-{
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(connectionString));
-}
+// Use in-memory database for simplicity
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseInMemoryDatabase("ConferenceAppDb"));
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => 
 {
@@ -65,8 +55,8 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        // Use Migrate instead of EnsureCreated for production environments
-        context.Database.Migrate();
+        // Ensure database is created for in-memory database
+        context.Database.EnsureCreated();
         
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();

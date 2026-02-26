@@ -59,7 +59,7 @@ resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-
   }
 }
 
-// Key Vault for secrets
+// Key Vault for secrets (keeping for future extensibility)
 resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' = {
   name: 'kv-${take(replace(environmentName, '-', ''), 24)}'
   location: location
@@ -82,58 +82,6 @@ resource keyVaultSecretsOfficerRoleAssignment 'Microsoft.Authorization/roleAssig
     roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b86a8fe4-44ce-4948-aee5-eccb2c155cd7')
     principalId: managedIdentity.properties.principalId
     principalType: 'ServicePrincipal'
-  }
-}
-
-// Database connection string secret
-resource dbConnectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyVault
-  name: 'ConnectionStrings--DefaultConnection'
-  properties: {
-    value: 'Server=tcp:sql-${environmentName}.database.windows.net,1433;Database=conferenceapp;Authentication=Active Directory Managed Identity;'
-  }
-}
-
-// SQL Server
-resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
-  name: 'sql-${environmentName}'
-  location: location
-  properties: {
-    administrators: {
-      administratorType: 'ActiveDirectory'
-      azureADOnlyAuthentication: true // Must be true per Azure policy
-      login: managedIdentity.name
-      principalType: 'Application'
-      sid: managedIdentity.properties.principalId
-    }
-    minimalTlsVersion: '1.2'
-    publicNetworkAccess: 'Enabled'
-  }
-}
-
-// SQL Database
-resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
-  parent: sqlServer
-  name: 'conferenceapp'
-  location: location
-  sku: {
-    name: 'Basic'
-    tier: 'Basic'
-    capacity: 5
-  }
-  properties: {
-    collation: 'SQL_Latin1_General_CP1_CI_AS'
-    maxSizeBytes: 2147483648 // 2 GB
-  }
-}
-
-// SQL firewall rule to allow Azure services
-resource sqlFirewallRule 'Microsoft.Sql/servers/firewallRules@2022-05-01-preview' = {
-  parent: sqlServer
-  name: 'AllowAzureServices'
-  properties: {
-    startIpAddress: '0.0.0.0'
-    endIpAddress: '0.0.0.0'
   }
 }
 
@@ -183,13 +131,6 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
           identity: managedIdentity.id
         }
       ]
-      secrets: [
-        {
-          name: 'connection-string'
-          keyVaultUrl: '${keyVault.properties.vaultUri}secrets/ConnectionStrings--DefaultConnection'
-          identity: managedIdentity.id
-        }
-      ]
     }
     template: {
       containers: [
@@ -205,10 +146,6 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
             {
               name: 'ASPNETCORE_ENVIRONMENT'
               value: 'Production'
-            }
-            {
-              name: 'ConnectionStrings__DefaultConnection'
-              secretRef: 'connection-string'
             }
             {
               name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
@@ -237,4 +174,3 @@ output RESOURCE_GROUP_ID string = resourceGroup().id
 output AZURE_CONTAINER_REGISTRY_ENDPOINT string = containerRegistry.properties.loginServer
 output CONTAINER_APP_URL string = 'https://${containerApp.properties.configuration.ingress.fqdn}'
 output CONTAINER_APP_NAME string = containerApp.name
-output AZURE_SQL_CONNECTION_STRING_KEY string = dbConnectionStringSecret.name
