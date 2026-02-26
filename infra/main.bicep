@@ -90,7 +90,7 @@ resource dbConnectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01'
   parent: keyVault
   name: 'ConnectionStrings--DefaultConnection'
   properties: {
-    value: 'Server=tcp:sql-${environmentName}.database.windows.net,1433;Database=conferenceapp;Authentication=Active Directory Managed Identity;User Id=${managedIdentity.properties.clientId};'
+    value: 'Server=tcp:sql-${environmentName}.database.windows.net,1433;Database=conferenceapp;Authentication=Active Directory Managed Identity;'
   }
 }
 
