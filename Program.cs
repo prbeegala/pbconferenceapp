@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using ConferenceApp.Data;
 using ConferenceApp.Models;
+using ConferenceApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,13 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 })
 .AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Configure Azure OpenAI
+builder.Services.Configure<AzureOpenAIOptions>(
+    builder.Configuration.GetSection(AzureOpenAIOptions.SectionName));
+
+// Register AI suggestion service
+builder.Services.AddSingleton<IAISuggestionService, AISuggestionService>();
 
 builder.Services.AddControllersWithViews();
 
