@@ -101,16 +101,13 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
   properties: {
     administrators: {
       administratorType: 'ActiveDirectory'
-      azureADOnlyAuthentication: true
-      login: 'conferenceapp-admin'
+      azureADOnlyAuthentication: true // Must be true per Azure policy
+      login: managedIdentity.name
       principalType: 'Application'
       sid: managedIdentity.properties.principalId
     }
     minimalTlsVersion: '1.2'
     publicNetworkAccess: 'Enabled'
-  }
-  identity: {
-    type: 'SystemAssigned'
   }
 }
 
