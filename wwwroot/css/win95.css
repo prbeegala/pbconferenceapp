@@ -1,0 +1,277 @@
+/* Windows 95 Theme */
+:root {
+  --win95-gray: #c0c0c0;
+  --win95-dark-gray: #808080;
+  --win95-light-gray: #dfdfdf;
+  --win95-white: #ffffff;
+  --win95-black: #000000;
+  --win95-blue: #000080;
+  --win95-title-blue: #000080;
+  --win95-title-gradient: linear-gradient(90deg, #000080, #1084d0);
+}
+
+body {
+  background-color: #008080 !important;
+  font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif !important;
+  margin-bottom: 60px;
+}
+
+/* Windows 95 Window Style */
+.container {
+  background-color: var(--win95-gray);
+  border: 2px solid;
+  border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+  padding: 3px;
+  margin-top: 20px;
+}
+
+/* Title Bar */
+.navbar {
+  background: var(--win95-title-gradient) !important;
+  border: none !important;
+  padding: 2px 4px !important;
+  margin-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+.navbar-brand {
+  color: white !important;
+  font-weight: bold !important;
+  font-size: 14px !important;
+  padding: 2px 8px !important;
+}
+
+.nav-link {
+  color: white !important;
+  font-size: 13px !important;
+  padding: 4px 8px !important;
+}
+
+.nav-link:hover {
+  background-color: rgba(255,255,255,0.1) !important;
+}
+
+/* Windows 95 Buttons */
+.btn {
+  background-color: var(--win95-gray) !important;
+  border: 2px solid !important;
+  border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white) !important;
+  color: var(--win95-black) !important;
+  font-family: "MS Sans Serif", sans-serif !important;
+  font-size: 13px !important;
+  padding: 4px 12px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+.btn:hover {
+  background-color: var(--win95-light-gray) !important;
+}
+
+.btn:active, .btn:focus {
+  border-color: var(--win95-black) var(--win95-white) var(--win95-white) var(--win95-black) !important;
+  box-shadow: inset 1px 1px 0 rgba(0,0,0,0.2) !important;
+}
+
+.btn-primary {
+  font-weight: bold !important;
+  border-width: 3px !important;
+}
+
+.btn-light, .btn-outline-light {
+  background-color: var(--win95-gray) !important;
+  color: var(--win95-black) !important;
+  border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white) !important;
+}
+
+/* Hero/Jumbotron */
+.jumbotron {
+  background: var(--win95-title-gradient) !important;
+  border: 2px solid;
+  border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white);
+  border-radius: 0 !important;
+  padding: 20px !important;
+  margin-bottom: 20px;
+}
+
+.jumbotron h1, .jumbotron p {
+  color: white !important;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+}
+
+/* Cards */
+.card {
+  background-color: var(--win95-gray) !important;
+  border: 2px solid !important;
+  border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.card-header {
+  background: var(--win95-title-gradient) !important;
+  color: white !important;
+  border-bottom: 2px solid var(--win95-black) !important;
+  font-weight: bold !important;
+  padding: 4px 8px !important;
+}
+
+.card-body {
+  background-color: var(--win95-gray) !important;
+  padding: 12px !important;
+}
+
+.card-footer {
+  background-color: var(--win95-gray) !important;
+  border-top: 2px solid var(--win95-white) !important;
+}
+
+.card-title {
+  color: var(--win95-black) !important;
+  font-weight: bold !important;
+}
+
+.card-text {
+  color: var(--win95-black) !important;
+}
+
+/* Form Controls */
+.form-control {
+  background-color: white !important;
+  border: 2px solid !important;
+  border-color: var(--win95-dark-gray) var(--win95-white) var(--win95-white) var(--win95-dark-gray) !important;
+  border-radius: 0 !important;
+  font-family: "MS Sans Serif", sans-serif !important;
+  padding: 4px !important;
+}
+
+.form-control:focus {
+  border-color: var(--win95-dark-gray) var(--win95-white) var(--win95-white) var(--win95-dark-gray) !important;
+  box-shadow: none !important;
+  outline: 1px dotted var(--win95-black) !important;
+  outline-offset: -3px !important;
+}
+
+.form-label {
+  font-weight: normal !important;
+  color: var(--win95-black) !important;
+  font-size: 13px !important;
+}
+
+/* Badges */
+.badge {
+  border-radius: 0 !important;
+  border: 1px solid var(--win95-black) !important;
+  font-weight: normal !important;
+  padding: 2px 6px !important;
+}
+
+.badge.bg-info {
+  background-color: #00ffff !important;
+  color: var(--win95-black) !important;
+}
+
+.badge.bg-secondary {
+  background-color: var(--win95-dark-gray) !important;
+  color: white !important;
+}
+
+/* Alerts */
+.alert {
+  border: 2px solid !important;
+  border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white) !important;
+  border-radius: 0 !important;
+  background-color: var(--win95-gray) !important;
+  color: var(--win95-black) !important;
+}
+
+.alert-success {
+  background-color: #c0ffc0 !important;
+}
+
+.alert-danger {
+  background-color: #ffc0c0 !important;
+}
+
+.alert-info {
+  background-color: #c0c0ff !important;
+}
+
+/* Footer */
+.footer {
+  background-color: var(--win95-gray) !important;
+  border-top: 2px solid var(--win95-white) !important;
+  color: var(--win95-black) !important;
+}
+
+/* Tables */
+table {
+  border: 2px solid var(--win95-black) !important;
+  border-collapse: collapse !important;
+}
+
+table th {
+  background-color: var(--win95-gray) !important;
+  border: 2px solid !important;
+  border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white) !important;
+  padding: 4px 8px !important;
+  font-weight: bold !important;
+}
+
+table td {
+  background-color: white !important;
+  border: 1px solid var(--win95-dark-gray) !important;
+  padding: 4px 8px !important;
+}
+
+/* Links */
+a {
+  color: var(--win95-blue) !important;
+  text-decoration: underline !important;
+}
+
+a:hover {
+  color: #1084d0 !important;
+}
+
+/* Dropdown */
+.dropdown-menu {
+  background-color: var(--win95-gray) !important;
+  border: 2px solid !important;
+  border-color: var(--win95-white) var(--win95-black) var(--win95-black) var(--win95-white) !important;
+  border-radius: 0 !important;
+  padding: 2px !important;
+}
+
+.dropdown-item {
+  color: var(--win95-black) !important;
+  padding: 4px 12px !important;
+  font-size: 13px !important;
+}
+
+.dropdown-item:hover {
+  background-color: var(--win95-blue) !important;
+  color: white !important;
+}
+
+/* Remove Bootstrap rounded corners globally */
+* {
+  border-radius: 0 !important;
+}
+
+/* Text colors */
+.text-muted {
+  color: var(--win95-dark-gray) !important;
+}
+
+.text-white {
+  color: white !important;
+}
+
+/* Small text on cards */
+small.text-muted {
+  color: var(--win95-dark-gray) !important;
+  font-size: 11px !important;
+}
